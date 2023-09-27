@@ -1,0 +1,37 @@
+.button_list {
+    text-align: center;
+}
+
+.home {
+    padding: 50px;
+    text-align: center;
+}
+
+.button_list {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 60px;
+    text-align: center;
+    background: rgb(112, 213, 226);
+}
+
+.base_button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 150px;
+    margin:0 auto;
+    padding: .9em 2em;
+    border: 1px solid white;
+    border-radius: 25px;
+    background-color: green;
+    color: white;
+    
+}
+
+.base_table {
+    margin: auto;
+}
