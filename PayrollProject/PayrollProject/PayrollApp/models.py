@@ -2,6 +2,7 @@ from django.db import models
 
 # Create your models here.
 
+# 講師情報DB
 class Teachers(models.Model):
     teacher_id = models.IntegerField(primary_key=True)
     teacher_name = models.CharField(max_length=20)
@@ -28,3 +29,14 @@ class Teachers(models.Model):
 
     def __str__(self):
         return self.teacher_name
+    
+# 曜日DB
+class DayOfWeek(models.Model):
+    day_id = models.IntegerField(primary_key=True)
+    day_name = models.CharField(max_length=5)
+
+    class Meta:
+        db_table = "day_of_week"
+
+    def __str__(self):
+        return self.day_name
