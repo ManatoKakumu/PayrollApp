@@ -4,17 +4,12 @@
         {% extends "base.html" %}
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        {% block title %}{{ block.super }}講師情報登録{% endblock %}
+        {% block title %}{{ block.super }}SUCCESS{% endblock %}
     </head>
     <body>
         {% block content %}
             <div class="home">
-                <h1>講師情報登録画面</h1>
-                <form method="POST">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <input type="submit" value="保存">
-                </form>
+                <h1>情報の登録が成功しました。</h1>
             </div>
         {% endblock %}
     </body>

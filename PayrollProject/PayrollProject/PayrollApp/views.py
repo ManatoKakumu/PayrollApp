@@ -2,6 +2,11 @@ from django.shortcuts import render
 from django.views.generic.base import (
     View,
 )
+from django.views.generic.edit import (
+    FormView,
+)
+from . import forms
+from django.urls import reverse_lazy
 # Create your views here.
 
 # 勤務報告画面
@@ -31,14 +36,22 @@ class ShiftView(View):
     def post(self, request, *args, **kwargs):
         pass
 
-# 講師情報登録画面
-class RegisterTeacherView(View):
+# 講師情報登録Form
+class TeacherFormView(FormView):
 
-    def get(self, request, *args, **kwargs):
-        return render(request, "registration/teacher.html")
-    
-    def post(self, request, *args, **kwargs):
-        pass
+    template_name = "registration/teacher.html"
+    form_class = forms.TeacherForm
+    success_url = reverse_lazy("payroll_app:success")
+
+    # def get_initial(self):
+    #     initial = super(TeacherFormView, self).get_initial()
+    #     initial["fare"] = 10
+    #     return initial
+
+    def form_valid(self, form):
+        if form.is_valid():
+            form.save()
+        return super(TeacherFormView, self).form_valid(form)
 
 # 授業情報登録画面
 class RegisterClassView(View):
