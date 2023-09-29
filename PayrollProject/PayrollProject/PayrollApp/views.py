@@ -1,12 +1,14 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic.base import (
-    View,
+    View, 
 )
 from django.views.generic.edit import (
     FormView,
 )
 from . import forms
+from . import models
 from django.urls import reverse_lazy
+from django.contrib.sessions.models import Session
 # Create your views here.
 
 # 勤務報告画面
@@ -43,25 +45,25 @@ class TeacherFormView(FormView):
     form_class = forms.TeacherForm
     success_url = reverse_lazy("payroll_app:success")
 
-    # def get_initial(self):
-    #     initial = super(TeacherFormView, self).get_initial()
-    #     initial["fare"] = 10
-    #     return initial
-
     def form_valid(self, form):
         if form.is_valid():
             form.save()
         return super(TeacherFormView, self).form_valid(form)
 
+
 # 授業情報登録画面
-class RegisterClassView(View):
+class RegisterLessonView(FormView):
 
-    def get(self, request, *args, **kwargs):
-        return render(request, "registration/class.html")
+    template_name = "registration/lesson.html"
+    form_class = forms.RegisterLessonForm
+    success_url = reverse_lazy("payroll_app:success")
+
+    def form_valid(self, form):
+        if form.is_valid():
+            form.save()
+        return super(RegisterLessonView, self).form_valid(form)
+
     
-    def post(self, request, *args, **kwargs):
-        pass
-
 # 連絡発信画面
 class ContactView(View):
 
