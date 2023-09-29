@@ -63,10 +63,5 @@ class RegisterLesson(models.Model):
     high12_time = models.IntegerField(null=True)
     high3_time = models.IntegerField(null=True)
 
-    # 事務給(単元テスト、テスト講評、その他)
-    unit_test = models.IntegerField(null=True)
-    test_review = models.IntegerField(null=True)
-    others = models.FloatField(null=True)
-
     def __str__(self):
         return "{} {}".format(self.teacher_name, self.day_of_week)

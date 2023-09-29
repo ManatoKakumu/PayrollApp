@@ -15,6 +15,7 @@ from django.contrib.sessions.models import Session
 class WorkReportView(View):
 
     def get(self, request, *args, **kwargs):
+        print(888888888888888)
         return render(request, "display/work_report.html")
     
     def post(self, request, *args, **kwargs):
