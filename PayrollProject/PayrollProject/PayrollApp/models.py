@@ -45,6 +45,9 @@ class DayOfWeek(models.Model):
 # 授業情報登録DB
 class RegisterLesson(models.Model):
 
+    class Meta:
+        db_table = "lesson"
+
     teacher_name = models.CharField(null=False, max_length=20)
 
     # 授業報告(日付、生徒名、授業時間、PS2、高1,2年、高3年)

@@ -6,3 +6,4 @@ from .models import Teachers, DayOfWeek, RegisterLesson
 
 admin.site.register(Teachers)
 admin.site.register(RegisterLesson)
+admin.site.register(DayOfWeek)
