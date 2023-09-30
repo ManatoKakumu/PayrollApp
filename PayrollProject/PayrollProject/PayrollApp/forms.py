@@ -60,7 +60,7 @@ class RegisterWorkReportForm(forms.ModelForm):
         model = RegisterWorkReport
         fields = "__all__"
 
-    teacher_name = forms.CharField(max_length=10, label="講師名")
+    teacher_name = forms.ModelChoiceField(queryset=Teachers.objects.all(), label="講師名")
     day = forms.DateField(label="日付", required=False)
     student1_1 = forms.CharField(max_length=10, label="生徒名1(15:15～16:45)", required=False)
     student1_2 = forms.CharField(max_length=10, label="生徒名2(15:15～16:45)", required=False)

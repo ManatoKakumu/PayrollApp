@@ -15,7 +15,7 @@ def get_day_of_week(dt):
     day_list = ['月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日', '日曜日']
     return (day_list[dt.weekday()])
 
-def test1(request):
+def before_register_work_report(request):
     form = forms.BeforeRegisterWorkReportForm()
     if request.method == "POST":
         form = forms.BeforeRegisterWorkReportForm(request.POST)
@@ -23,17 +23,17 @@ def test1(request):
             global teacher_name, day
             teacher_name = form.cleaned_data["teacher_name"]
             day = form.cleaned_data["day"]
-            return redirect("payroll_app:test2")
+            return redirect("payroll_app:register_work_report")
     return render(request, "display/work_report.html", context={
         "form": form,
     })
 
-def test2(request):
+def register_work_report(request):
     ctx = {}
     day_of_week = get_day_of_week(day)
-    lesson_info = models.RegisterLesson.objects.filter(teacher_name=teacher_name, day_of_week=day_of_week).values("high12_time")
+    lesson_info = models.RegisterLesson.objects.filter(teacher_name=teacher_name, day_of_week=day_of_week).values("class_time")
     # print(lesson_info.query)
-    a = lesson_info[0]["high12_time"]
+    a = lesson_info[0]["class_time"]
     print(a)
     initial_values = {"teacher_name": teacher_name, "day":day, "class_time":a}
     form = forms.RegisterWorkReportForm(initial_values)
@@ -41,32 +41,6 @@ def test2(request):
     # return redirect("payroll_app:success")
     return render(request, "display/work_report.html", ctx)
 
-
-
-
-# 勤務報告画面
-class WorkReportView(View):
-
-    # def get(self, request, *args, **kwargs):
-    #     print(888888888888888)
-    #     return render(request, "display/work_report.html")
-    
-    # def post(self, request, *args, **kwargs):
-    #     pass
-
-    def get(self, request, *args, **kwargs):
-        attendance_form = forms.BeforeRegisterWorkReportForm()
-        return render(request, "display/work_report.html", context={
-            "form": attendance_form,
-        })
-
-    # def post(self, request, *args, **kwargs):
-    #     attendance_form = forms.TeacherForm(request.POST or None)
-    #     if attendance_form.is_valid():
-    #         attendance_form.save()
-    #     return render(request, "display/attendance.html", context={
-    #         "attendance_form": attendance_form,
-    #     })
 
 # 給与計算画面
 class PayrollView(View):
