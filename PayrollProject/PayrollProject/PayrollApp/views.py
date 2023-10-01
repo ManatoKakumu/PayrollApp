@@ -8,7 +8,8 @@ from django.views.generic.edit import (
 from . import forms
 from . import models
 from django.urls import reverse_lazy
-from django.contrib.sessions.models import Session
+import configparser
+
 # Create your views here.
 
 def get_day_of_week(dt):
@@ -65,6 +66,11 @@ def register_work_report(request):
     ctx["form"] = form
     
     if request.method == "POST":
+        config = configparser.ConfigParser()
+        config.read("config.ini", encoding="utf-8")
+        lesson_fee = config.getint("salary_params", "lesson_fee")
+        office_work_fee = config.getint("salary_params", "office_work_fee")
+
         if form.is_valid():
             form.save()
             return redirect("payroll_app:success")
