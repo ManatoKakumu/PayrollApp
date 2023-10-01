@@ -17,28 +17,58 @@ def get_day_of_week(dt):
 
 def before_register_work_report(request):
     form = forms.BeforeRegisterWorkReportForm()
+    
     if request.method == "POST":
         form = forms.BeforeRegisterWorkReportForm(request.POST)
+        
         if form.is_valid():
             global teacher_name, day
             teacher_name = form.cleaned_data["teacher_name"]
             day = form.cleaned_data["day"]
+            
             return redirect("payroll_app:register_work_report")
-    return render(request, "display/work_report.html", context={
+    
+    return render(request, "display/before_work_report.html", context={
         "form": form,
     })
 
 def register_work_report(request):
     ctx = {}
     day_of_week = get_day_of_week(day)
-    lesson_info = models.RegisterLesson.objects.filter(teacher_name=teacher_name, day_of_week=day_of_week).values("class_time")
-    # print(lesson_info.query)
-    a = lesson_info[0]["class_time"]
-    print(a)
-    initial_values = {"teacher_name": teacher_name, "day":day, "class_time":a}
+    lesson_info = models.RegisterLesson.objects.filter(teacher_name=teacher_name, day_of_week=day_of_week).values()
+    
+    if lesson_info.exists():
+        student1_1 = lesson_info[0]["student1_1"]
+        student1_2 = lesson_info[0]["student1_2"]
+        student2_1 = lesson_info[0]["student2_1"]
+        student2_2 = lesson_info[0]["student2_2"]
+        student3_1 = lesson_info[0]["student3_1"]
+        student3_2 = lesson_info[0]["student3_2"]
+        student4_1 = lesson_info[0]["student4_1"]
+        student4_2 = lesson_info[0]["student4_2"]
+        class_time = lesson_info[0]["class_time"]
+        PS2_time = lesson_info[0]["PS2_time"]
+        high12_time = lesson_info[0]["high12_time"]
+        high3_time = lesson_info[0]["high3_time"]
+        
+        initial_values = {"teacher_name": teacher_name, "day":day, 
+                          "student1_1": student1_1, "student1_2": student1_2, 
+                          "student2_1": student2_1, "student2_2": student2_2, 
+                          "student3_1": student3_1, "student3_2": student3_2, 
+                          "student4_1": student4_1, "student4_2": student4_2, 
+                          "class_time": class_time, "PS2_time": PS2_time, 
+                          "high12_time": high12_time, "high3_time": high3_time, }
+    else:
+        initial_values = {"teacher_name": teacher_name, "day":day}
+    
     form = forms.RegisterWorkReportForm(initial_values)
     ctx["form"] = form
-    # return redirect("payroll_app:success")
+    
+    if request.method == "POST":
+        if form.is_valid():
+            form.save()
+            return redirect("payroll_app:success")
+    
     return render(request, "display/work_report.html", ctx)
 
 
