@@ -37,6 +37,7 @@ def register_work_report(request):
     ctx = {}
     day_of_week = get_day_of_week(day)
     lesson_info = models.RegisterLesson.objects.filter(teacher_name=teacher_name, day_of_week=day_of_week).values()
+    day_month = day.month
     
     if lesson_info.exists():
         student1_1 = lesson_info[0]["student1_1"]
