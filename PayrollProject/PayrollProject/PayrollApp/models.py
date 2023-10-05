@@ -41,6 +41,14 @@ class DayOfWeek(models.Model):
 
     def __str__(self):
         return self.day_name
+
+# 月DB
+class Month(models.Model):
+    month_id = models.IntegerField(primary_key=True)
+    month = models.CharField(max_length=5)
+
+    def __str__(self):
+        return self.month
     
 # 授業情報登録DB
 class RegisterLesson(models.Model):
