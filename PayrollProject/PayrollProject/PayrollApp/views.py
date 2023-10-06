@@ -16,6 +16,41 @@ def get_day_of_week(dt):
     day_list = ['月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日', '日曜日']
     return (day_list[dt.weekday()])
 
+def calculate_payroll(lesson_fee, office_work_fee, class_time, 
+                      PS2_time, high12_time, high3_time, 
+                      unit_test, test_review, others):
+    sum = 0
+
+    if class_time is not None:
+        class_time = class_time * lesson_fee
+        sum += class_time
+    
+    if PS2_time is not None:
+        PS2_time = PS2_time * 200
+        sum += PS2_time
+    
+    if high12_time is not None:
+        high12_time = high12_time * 200 * 1.5
+        sum += high12_time
+    
+    if high3_time is not None:
+        high3_time = high3_time * 300 * 1.5
+        sum += high3_time
+    
+    if unit_test is not None:
+        unit_test = unit_test * office_work_fee * 0.15
+        sum += unit_test
+    
+    if test_review is not None:
+        test_review = test_review * office_work_fee * 0.25
+        sum += test_review
+    
+    if others is not None:
+        others = others * office_work_fee
+        sum += others
+
+    return sum
+
 def before_register_work_report(request):
     form = forms.BeforeRegisterWorkReportForm()
     
@@ -37,7 +72,9 @@ def register_work_report(request):
     ctx = {}
     day_of_week = get_day_of_week(day)
     lesson_info = models.RegisterLesson.objects.filter(teacher_name=teacher_name, day_of_week=day_of_week).values()
-    day_month = day.month
+    teacher_info = models.Teachers.objects.get(teacher_name=teacher_name)
+    teacher_info.Jan_salary+=10
+    teacher_info.save()
     
     if lesson_info.exists():
         student1_1 = lesson_info[0]["student1_1"]
@@ -63,18 +100,36 @@ def register_work_report(request):
     else:
         initial_values = {"teacher_name": teacher_name, "day":day}
     
-    form = forms.RegisterWorkReportForm(initial_values)
-    ctx["form"] = form
+    form = forms.RegisterWorkReportForm(initial=initial_values)
     
     if request.method == "POST":
         config = configparser.ConfigParser()
         config.read("config.ini", encoding="utf-8")
         lesson_fee = config.getint("salary_params", "lesson_fee")
         office_work_fee = config.getint("salary_params", "office_work_fee")
+        form = forms.RegisterWorkReportForm(request.POST)
 
         if form.is_valid():
+
+            class_time = form.cleaned_data["class_time"]
+            PS2_time = form.cleaned_data["PS2_time"]
+            high12_time = form.cleaned_data["high12_time"]
+            high3_time = form.cleaned_data["high3_time"]
+            unit_test = form.cleaned_data["unit_test"]
+            test_review = form.cleaned_data["test_review"]
+            others = form.cleaned_data["others"]
+            
+            today_payroll = calculate_payroll(lesson_fee, office_work_fee, class_time, 
+                              PS2_time, high12_time, high3_time, 
+                              unit_test, test_review, others)
+
             form.save()
+
             return redirect("payroll_app:success")
+    
+    form.fields['teacher_name'].initial = teacher_name
+    form.fields['day'].initial = day
+    ctx["form"] = form
     
     return render(request, "display/work_report.html", ctx)
 
