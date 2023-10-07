@@ -72,9 +72,6 @@ def register_work_report(request):
     ctx = {}
     day_of_week = get_day_of_week(day)
     lesson_info = models.RegisterLesson.objects.filter(teacher_name=teacher_name, day_of_week=day_of_week).values()
-    teacher_info = models.Teachers.objects.get(teacher_name=teacher_name)
-    teacher_info.Jan_salary+=10
-    teacher_info.save()
     
     if lesson_info.exists():
         student1_1 = lesson_info[0]["student1_1"]
@@ -118,10 +115,53 @@ def register_work_report(request):
             unit_test = form.cleaned_data["unit_test"]
             test_review = form.cleaned_data["test_review"]
             others = form.cleaned_data["others"]
+            new_day = form.cleaned_data["day"]
+            new_teacher_name = form.cleaned_data["teacher_name"]
             
             today_payroll = calculate_payroll(lesson_fee, office_work_fee, class_time, 
                               PS2_time, high12_time, high3_time, 
                               unit_test, test_review, others)
+            
+            teacher_info = models.Teachers.objects.get(teacher_name=new_teacher_name)
+            month = new_day.month
+
+            if month == 1:
+                teacher_info.Jan_salary += today_payroll
+                teacher_info.save()
+            elif month == 2:
+                teacher_info.Feb_salary += today_payroll
+                teacher_info.save()
+            elif month == 3:
+                teacher_info.Mar_salary += today_payroll
+                teacher_info.save()
+            elif month == 4:
+                teacher_info.Apr_salary += today_payroll
+                teacher_info.save()
+            elif month == 5:
+                teacher_info.May_salary += today_payroll
+                teacher_info.save()
+            elif month == 6:
+                teacher_info.Jun_salary += today_payroll
+                teacher_info.save()
+            elif month == 7:
+                teacher_info.Jul_salary += today_payroll
+                teacher_info.save()
+            elif month == 8:
+                teacher_info.Aug_salary += today_payroll
+                teacher_info.save()
+            elif month == 9:
+                teacher_info.Sep_salary += today_payroll
+                teacher_info.save()
+            elif month == 10:
+                teacher_info.Oct_salary += today_payroll
+                teacher_info.save()
+            elif month == 11:
+                teacher_info.Nov_salary += today_payroll
+                teacher_info.save()
+            elif month == 12:
+                teacher_info.Dec_salary += today_payroll
+                teacher_info.save()
+
 
             form.save()
 
