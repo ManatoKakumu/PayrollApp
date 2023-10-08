@@ -123,6 +123,7 @@ def register_work_report(request):
                               unit_test, test_review, others)
             
             teacher_info = models.Teachers.objects.get(teacher_name=new_teacher_name)
+            today_payroll += teacher_info.fare
             month = new_day.month
 
             if month == 1:
