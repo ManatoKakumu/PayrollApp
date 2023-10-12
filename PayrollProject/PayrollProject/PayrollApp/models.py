@@ -111,3 +111,12 @@ class RegisterWorkReport(models.Model):
 
     def __str__(self):
         return "{} {}".format(self.teacher_name, self.day)
+    
+# 給与計算DB
+class Payroll(models.Model):
+
+    class Meta:
+        db_table ="payroll"
+
+    teacher_name = models.CharField(max_length=20)
+    month = models.CharField(max_length=5)

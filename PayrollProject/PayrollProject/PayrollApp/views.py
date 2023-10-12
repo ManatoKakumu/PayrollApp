@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.generic.base import (
     View, 
@@ -176,13 +177,14 @@ def register_work_report(request):
 
 
 # 給与計算画面
-class PayrollView(View):
+class PayrollView(FormView):
 
-    def get(self, request, *args, **kwargs):
-        return render(request, "display/payroll.html")
-    
-    def post(self, request, *args, **kwargs):
-        pass
+    template_name = "display/payroll.html"
+    form_class = forms.PayrollForm
+    success_url = reverse_lazy("payroll_app:success")
+
+    def form_valid(self, form):
+        return super().form_valid(form)
 
 # シフト画面
 class ShiftView(View):

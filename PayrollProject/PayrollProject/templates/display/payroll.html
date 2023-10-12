@@ -10,6 +10,11 @@
         {% block content %}
             <div class="home">
                 <h1>給与計算画面</h1>
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <input type="submit" value="表示">
+                </form>
             </div>
         {% endblock %}
     </body>

@@ -1,6 +1,7 @@
 from django import forms
 from .models import (
     Teachers, DayOfWeek, RegisterLesson, RegisterWorkReport,
+    Payroll, Month, 
 )
 import datetime
 
@@ -80,3 +81,13 @@ class RegisterWorkReportForm(forms.ModelForm):
     unit_test = forms.IntegerField(label="単元テスト回数", required=False)
     test_review = forms.IntegerField(label="テスト講評回数", required=False)
     others = forms.FloatField(label="その他の事務時間", required=False)
+
+
+class PayrollForm(forms.ModelForm):
+
+    class Meta:
+        model = Payroll
+        fields = "__all__"
+
+    teacher_name = forms.ModelChoiceField(queryset=Teachers.objects.all(), label="講師名")
+    month = forms.ModelChoiceField(queryset=Month.objects.all(), label="月")
