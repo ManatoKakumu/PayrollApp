@@ -15,6 +15,10 @@
                     {{ form.as_p }}
                     <input type="submit" value="表示">
                 </form>
+                {% if salary %}
+                    <h1>今月の給料は{{ salary }}円です。</h1>
+                    <h1>お疲れ様でした。</h1>
+                {% endif %}
             </div>
         {% endblock %}
     </body>
