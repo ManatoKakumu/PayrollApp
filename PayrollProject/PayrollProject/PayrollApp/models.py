@@ -112,7 +112,7 @@ class RegisterWorkReport(models.Model):
     def __str__(self):
         return "{} {}".format(self.teacher_name, self.day)
     
-# 給与計算DB
+# 給与表示DB
 class Payroll(models.Model):
 
     class Meta:

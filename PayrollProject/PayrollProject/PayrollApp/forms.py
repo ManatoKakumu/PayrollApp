@@ -82,7 +82,7 @@ class RegisterWorkReportForm(forms.ModelForm):
     test_review = forms.IntegerField(label="テスト講評回数", required=False)
     others = forms.FloatField(label="その他の事務時間", required=False)
 
-
+# 給与表示Form
 class PayrollForm(forms.ModelForm):
 
     class Meta:

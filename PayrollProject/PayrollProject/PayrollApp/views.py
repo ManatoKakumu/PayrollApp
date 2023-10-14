@@ -176,15 +176,29 @@ def register_work_report(request):
     return render(request, "display/work_report.html", ctx)
 
 
-# 給与計算画面
-class PayrollView(FormView):
+# 給与表示画面
+class PayrollView(View):
 
-    template_name = "display/payroll.html"
-    form_class = forms.PayrollForm
-    success_url = reverse_lazy("payroll_app:success")
+    def get(self, request, *args, **kwargs):
+        form = forms.PayrollForm()
 
-    def form_valid(self, form):
-        return super().form_valid(form)
+        return render(request, "display/payroll.html", context={
+            "form": form,
+        })
+    
+    def post(self, request, *args, **kwargs):
+        form = forms.PayrollForm(request.POST or None)
+
+        if form.is_valid():
+            print("YES")
+            salary = 1000
+            return render(request, "display/payroll.html", context={
+                "salary":salary,
+            })
+        
+        return render(request, "display/payroll.html", context={
+                "form":form,
+            })
 
 # シフト画面
 class ShiftView(View):
