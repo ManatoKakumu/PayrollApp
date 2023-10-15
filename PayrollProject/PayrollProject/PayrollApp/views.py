@@ -177,28 +177,31 @@ def register_work_report(request):
 
 
 # 給与表示画面
-class PayrollView(View):
+def show_payroll(request):
+    form = forms.PayrollForm()
 
-    def get(self, request, *args, **kwargs):
-        form = forms.PayrollForm()
-
-        return render(request, "display/payroll.html", context={
-            "form": form,
-        })
-    
-    def post(self, request, *args, **kwargs):
-        form = forms.PayrollForm(request.POST or None)
+    if request.method == "POST":
+        form = forms.PayrollForm(request.POST)
 
         if form.is_valid():
-            print("YES")
-            salary = 1000
-            return render(request, "display/payroll.html", context={
-                "salary":salary,
-            })
-        
-        return render(request, "display/payroll.html", context={
-                "form":form,
-            })
+            global teacher_name_for_payroll, month_for_payroll
+            teacher_name_for_payroll = form.cleaned_data["teacher_name"]
+            month_for_payroll = form.cleaned_data["month"]
+
+            return redirect("payroll_app:payroll_result")
+    
+    return render(request, "display/payroll.html", context={
+        "form": form,
+    })
+
+def result_payroll(request):
+    # print(teacher_name_for_payroll, month_for_payroll)
+    salary = 1000
+
+    return render(request, "display/payroll_show.html", context={
+        "salary": salary,
+    })
+
 
 # シフト画面
 class ShiftView(View):

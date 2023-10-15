@@ -9,12 +9,11 @@
     <body>
         {% block content %}
             <div class="home">
-                <h1>給与計算画面</h1>
-                <form method="POST">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <input type="submit" value="表示">
-                </form>
+                <h1>給与表示画面</h1>
+                {% if salary %}
+                    <h1>今月の給料は{{ salary }}円です。</h1>
+                    <h1>お疲れ様でした。</h1>
+                {% endif %}
             </div>
         {% endblock %}
     </body>
