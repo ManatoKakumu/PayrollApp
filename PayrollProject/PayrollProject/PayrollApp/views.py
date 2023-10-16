@@ -186,7 +186,7 @@ def show_payroll(request):
         if form.is_valid():
             global teacher_name_for_payroll, month_for_payroll
             teacher_name_for_payroll = form.cleaned_data["teacher_name"]
-            month_for_payroll = form.cleaned_data["month"]
+            month_for_payroll = str(form.cleaned_data["month"])
 
             return redirect("payroll_app:payroll_result")
     
@@ -195,9 +195,32 @@ def show_payroll(request):
     })
 
 def result_payroll(request):
-    # print(teacher_name_for_payroll, month_for_payroll)
-    salary = 1000
-
+    teacher_payroll = models.Teachers.objects.filter(teacher_name=teacher_name_for_payroll).values()
+    if (month_for_payroll == "1月"):
+        salary = teacher_payroll[0]["Jan_salary"]
+    if (month_for_payroll == "2月"):
+        salary = teacher_payroll[0]["Feb_salary"]
+    if (month_for_payroll == "3月"):
+        salary = teacher_payroll[0]["Mar_salary"]
+    if (month_for_payroll == "4月"):
+        salary = teacher_payroll[0]["Apr_salary"]
+    if (month_for_payroll == "5月"):
+        salary = teacher_payroll[0]["May_salary"]
+    if (month_for_payroll == "6月"):
+        salary = teacher_payroll[0]["Jun_salary"]
+    if (month_for_payroll == "7月"):
+        salary = teacher_payroll[0]["Jul_salary"]
+    if (month_for_payroll == "8月"):
+        salary = teacher_payroll[0]["Aug_salary"]
+    if (month_for_payroll == "9月"):
+        salary = teacher_payroll[0]["Sep_salary"]
+    if (month_for_payroll == "10月"):
+        salary = teacher_payroll[0]["Oct_salary"]
+    if (month_for_payroll == "11月"):
+        salary = teacher_payroll[0]["Nov_salary"]
+    if (month_for_payroll == "12月"):
+        salary = teacher_payroll[0]["Dec_salary"]
+    
     return render(request, "display/payroll_show.html", context={
         "salary": salary,
     })
