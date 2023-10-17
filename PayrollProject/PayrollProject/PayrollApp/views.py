@@ -176,7 +176,7 @@ def register_work_report(request):
     return render(request, "display/work_report.html", ctx)
 
 
-# 給与表示画面
+# 給与選択画面
 def show_payroll(request):
     form = forms.PayrollForm()
 
@@ -194,6 +194,7 @@ def show_payroll(request):
         "form": form,
     })
 
+# 給与表示画面
 def result_payroll(request):
     teacher_payroll = models.Teachers.objects.filter(teacher_name=teacher_name_for_payroll).values()
     if (month_for_payroll == "1月"):
@@ -221,8 +222,13 @@ def result_payroll(request):
     if (month_for_payroll == "12月"):
         salary = teacher_payroll[0]["Dec_salary"]
     
+    if (salary == 0):
+        return render(request, "display/payroll_none_data.html", context={
+            "month":month_for_payroll,
+        })
+
     return render(request, "display/payroll_show.html", context={
-        "salary": salary,
+        "salary": salary, "month":month_for_payroll,
     })
 
 
