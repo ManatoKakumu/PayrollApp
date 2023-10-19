@@ -1,4 +1,3 @@
-from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.generic.base import (
     View, 
@@ -6,8 +5,13 @@ from django.views.generic.base import (
 from django.views.generic.edit import (
     FormView,
 )
-from . import forms
-from . import models
+from . models import (
+    RegisterLesson, Teachers, 
+)
+from . forms import (
+    BeforeRegisterWorkReportForm, RegisterWorkReportForm, PayrollForm, 
+    TeacherForm, RegisterLessonForm, 
+)
 from django.urls import reverse_lazy
 import configparser
 
@@ -53,10 +57,10 @@ def calculate_payroll(lesson_fee, office_work_fee, class_time,
     return sum
 
 def before_register_work_report(request):
-    form = forms.BeforeRegisterWorkReportForm()
+    form = BeforeRegisterWorkReportForm()
     
     if request.method == "POST":
-        form = forms.BeforeRegisterWorkReportForm(request.POST)
+        form = BeforeRegisterWorkReportForm(request.POST)
         
         if form.is_valid():
             global teacher_name, day
@@ -72,7 +76,7 @@ def before_register_work_report(request):
 def register_work_report(request):
     ctx = {}
     day_of_week = get_day_of_week(day)
-    lesson_info = models.RegisterLesson.objects.filter(teacher_name=teacher_name, day_of_week=day_of_week).values()
+    lesson_info = RegisterLesson.objects.filter(teacher_name=teacher_name, day_of_week=day_of_week).values()
     
     if lesson_info.exists():
         student1_1 = lesson_info[0]["student1_1"]
@@ -98,14 +102,14 @@ def register_work_report(request):
     else:
         initial_values = {"teacher_name": teacher_name, "day":day}
     
-    form = forms.RegisterWorkReportForm(initial=initial_values)
+    form = RegisterWorkReportForm(initial=initial_values)
     
     if request.method == "POST":
         config = configparser.ConfigParser()
         config.read("config.ini", encoding="utf-8")
         lesson_fee = config.getint("salary_params", "lesson_fee")
         office_work_fee = config.getint("salary_params", "office_work_fee")
-        form = forms.RegisterWorkReportForm(request.POST)
+        form = RegisterWorkReportForm(request.POST)
 
         if form.is_valid():
 
@@ -123,7 +127,7 @@ def register_work_report(request):
                               PS2_time, high12_time, high3_time, 
                               unit_test, test_review, others)
             
-            teacher_info = models.Teachers.objects.get(teacher_name=new_teacher_name)
+            teacher_info = Teachers.objects.get(teacher_name=new_teacher_name)
             today_payroll += teacher_info.fare
             month = new_day.month
 
@@ -178,10 +182,10 @@ def register_work_report(request):
 
 # 給与選択画面
 def show_payroll(request):
-    form = forms.PayrollForm()
+    form = PayrollForm()
 
     if request.method == "POST":
-        form = forms.PayrollForm(request.POST)
+        form = PayrollForm(request.POST)
 
         if form.is_valid():
             global teacher_name_for_payroll, month_for_payroll
@@ -196,7 +200,7 @@ def show_payroll(request):
 
 # 給与表示画面
 def result_payroll(request):
-    teacher_payroll = models.Teachers.objects.filter(teacher_name=teacher_name_for_payroll).values()
+    teacher_payroll = Teachers.objects.filter(teacher_name=teacher_name_for_payroll).values()
     if (month_for_payroll == "1月"):
         salary = teacher_payroll[0]["Jan_salary"]
     if (month_for_payroll == "2月"):
@@ -245,7 +249,7 @@ class ShiftView(View):
 class TeacherFormView(FormView):
 
     template_name = "registration/teacher.html"
-    form_class = forms.TeacherForm
+    form_class = TeacherForm
     success_url = reverse_lazy("payroll_app:success")
 
     def form_valid(self, form):
@@ -258,7 +262,7 @@ class TeacherFormView(FormView):
 class RegisterLessonView(FormView):
 
     template_name = "registration/lesson.html"
-    form_class = forms.RegisterLessonForm
+    form_class = RegisterLessonForm
     success_url = reverse_lazy("payroll_app:success")
 
     def form_valid(self, form):
