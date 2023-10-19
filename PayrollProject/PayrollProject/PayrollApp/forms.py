@@ -21,7 +21,7 @@ class RegisterLessonForm(forms.ModelForm):
 
     class Meta:
         model = RegisterLesson
-        fields = "__all__"
+        exclude = ["day"]
 
     teacher_name = forms.ModelChoiceField(queryset=Teachers.objects.all(), label="講師名")
 
@@ -59,7 +59,7 @@ class RegisterWorkReportForm(forms.ModelForm):
 
     class Meta:
         model = RegisterWorkReport
-        fields = "__all__"
+        exclude = ["day_of_week"]
 
     teacher_name = forms.ModelChoiceField(queryset=Teachers.objects.all(), label="講師名")
     day = forms.DateField(label="日付", required=False)
