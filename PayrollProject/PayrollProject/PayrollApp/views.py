@@ -180,60 +180,76 @@ def register_work_report(request):
     return render(request, "display/work_report.html", ctx)
 
 
-# 給与選択画面
-def show_payroll(request):
-    form = PayrollForm()
+# 給与選択画面 (給与表示する講師名と該当する月を選ぶ)
+class PayrollView(View):
+    
+    def get(self, request):
+        form = PayrollForm()
+        return render(request, "display/payroll.html", context={
+            "form": form,
+        })
 
-    if request.method == "POST":
+    def post(self, request):
         form = PayrollForm(request.POST)
 
         if form.is_valid():
-            global teacher_name_for_payroll, month_for_payroll
             teacher_name_for_payroll = form.cleaned_data["teacher_name"]
             month_for_payroll = str(form.cleaned_data["month"])
 
+            teacher = Teachers.objects.get(teacher_name=teacher_name_for_payroll)
+            
+            request.session['teacher_id_for_payroll'] = teacher.teacher_id
+            request.session['month_for_payroll'] = month_for_payroll
+
             return redirect("payroll_app:payroll_result")
-    
-    return render(request, "display/payroll.html", context={
-        "form": form,
-    })
 
-# 給与表示画面
-def result_payroll(request):
-    teacher_payroll = Teachers.objects.filter(teacher_name=teacher_name_for_payroll).values()
-    if (month_for_payroll == "1月"):
-        salary = teacher_payroll[0]["Jan_salary"]
-    if (month_for_payroll == "2月"):
-        salary = teacher_payroll[0]["Feb_salary"]
-    if (month_for_payroll == "3月"):
-        salary = teacher_payroll[0]["Mar_salary"]
-    if (month_for_payroll == "4月"):
-        salary = teacher_payroll[0]["Apr_salary"]
-    if (month_for_payroll == "5月"):
-        salary = teacher_payroll[0]["May_salary"]
-    if (month_for_payroll == "6月"):
-        salary = teacher_payroll[0]["Jun_salary"]
-    if (month_for_payroll == "7月"):
-        salary = teacher_payroll[0]["Jul_salary"]
-    if (month_for_payroll == "8月"):
-        salary = teacher_payroll[0]["Aug_salary"]
-    if (month_for_payroll == "9月"):
-        salary = teacher_payroll[0]["Sep_salary"]
-    if (month_for_payroll == "10月"):
-        salary = teacher_payroll[0]["Oct_salary"]
-    if (month_for_payroll == "11月"):
-        salary = teacher_payroll[0]["Nov_salary"]
-    if (month_for_payroll == "12月"):
-        salary = teacher_payroll[0]["Dec_salary"]
-    
-    if (salary == 0):
-        return render(request, "display/payroll_none_data.html", context={
-            "month":month_for_payroll,
+        return render(request, "display/payroll.html", context={"form": form})
+
+
+
+# 給与表示画面 (PayrollViewにて選択したものに該当する給料を表示する)
+class ResultPayrollView(View):
+    def get(self, request):
+        teacher_id_for_payroll = request.session.get('teacher_id_for_payroll')
+        month_for_payroll = request.session.get('month_for_payroll')
+
+        if teacher_id_for_payroll is None or month_for_payroll is None:
+            return redirect("payroll_app:payroll")
+
+        try:
+            teacher = Teachers.objects.get(pk=teacher_id_for_payroll)
+        except Teachers.DoesNotExist:
+            teacher = None
+
+        if teacher is None:
+            return render(request, "display/payroll_none_data.html", context={
+                "month": month_for_payroll,
+            })
+
+        month_salary_mapping = {
+            "1月": "Jan_salary",
+            "2月": "Feb_salary",
+            "3月": "Mar_salary",
+            "4月": "Apr_salary",
+            "5月": "May_salary",
+            "6月": "Jun_salary",
+            "7月": "Jul_salary",
+            "8月": "Aug_salary",
+            "9月": "Sep_salary",
+            "10月": "Oct_salary",
+            "11月": "Nov_salary",
+            "12月": "Dec_salary",
+        }
+        salary = getattr(teacher, month_salary_mapping.get(month_for_payroll))
+
+        if salary == 0:
+            return render(request, "display/payroll_none_data.html", context={
+                "month": month_for_payroll,
+            })
+
+        return render(request, "display/payroll_show.html", context={
+            "salary": salary, "month": month_for_payroll,
         })
-
-    return render(request, "display/payroll_show.html", context={
-        "salary": salary, "month":month_for_payroll,
-    })
 
 
 # シフト画面
@@ -245,7 +261,7 @@ class ShiftView(View):
     def post(self, request, *args, **kwargs):
         pass
 
-# 講師情報登録Form
+# 講師情報登録画面
 class TeacherFormView(FormView):
 
     template_name = "registration/teacher.html"

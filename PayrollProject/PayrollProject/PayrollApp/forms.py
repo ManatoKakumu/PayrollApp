@@ -27,7 +27,6 @@ class RegisterLessonForm(forms.ModelForm):
     # 講師名
     teacher_name = forms.ModelChoiceField(queryset=Teachers.objects.all(), label="講師名")
 
-    # 授業報告
     # 曜日、生徒名
     day_of_week = forms.ModelChoiceField(queryset=DayOfWeek.objects.all(), label="曜日")
     student1_1 = forms.CharField(max_length=20, label="生徒名1(15:15～16:45)", required=False)
