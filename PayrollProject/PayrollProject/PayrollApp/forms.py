@@ -68,7 +68,7 @@ class RegisterWorkReportForm(RegisterLessonForm):
         exclude = ["day_of_week"]
 
     # 曜日の非表示化
-    day_of_week = forms.CharField(widget=forms.HiddenInput())
+    day_of_week = forms.CharField(widget=forms.HiddenInput(), required=False)
 
     # 日付
     day = forms.DateField(label="日付", required=False)
