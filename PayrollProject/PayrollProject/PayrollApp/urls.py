@@ -2,7 +2,7 @@ from django.urls import path
 from .views import (
     ShiftView, TeacherFormView,
     RegisterLessonView, ContactView, OutputCSVView,
-    before_register_work_report, register_work_report,
+    BeforeRegisterWorkReportView, RegisterWorkReportView,
     PayrollView, ResultPayrollView, 
 )
 from django.views.generic.base import TemplateView
@@ -10,8 +10,8 @@ from django.views.generic.base import TemplateView
 app_name = "payroll_app"
 urlpatterns = [
     path("", TemplateView.as_view(template_name="display/home.html"), name="home"),
-    path("before_register_work_report/", before_register_work_report, name="before_register_work_report"),
-    path("register_work_report/", register_work_report, name="register_work_report"),
+    path("before_register_work_report/", BeforeRegisterWorkReportView.as_view(), name="before_register_work_report"),
+    path("register_work_report/", RegisterWorkReportView.as_view(), name="register_work_report"),
     path("payroll/", PayrollView.as_view(), name="payroll"),
     path("payroll_result/", ResultPayrollView.as_view(), name="payroll_result"),
     path("shift/", ShiftView.as_view(), name="shift"),
