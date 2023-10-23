@@ -194,16 +194,6 @@ class ResultPayrollView(View):
             "salary": salary, "month": month_for_payroll,
         })
 
-
-# シフト画面
-class ShiftView(View):
-
-    def get(self, request, *args, **kwargs):
-        return render(request, "display/shift.html")
-    
-    def post(self, request, *args, **kwargs):
-        pass
-
 # 講師情報登録画面
 class TeacherFormView(FormView):
 
@@ -228,22 +218,3 @@ class RegisterLessonView(FormView):
         if form.is_valid():
             form.save()
         return super(RegisterLessonView, self).form_valid(form)
-
-    
-# 連絡発信画面
-class ContactView(View):
-
-    def get(self, request, *args, **kwargs):
-        return render(request, "registration/contact.html")
-    
-    def post(self, request, *args, **kwargs):
-        pass
-
-# csv出力画面
-class OutputCSVView(View):
-
-    def get(self, request, *args, **kwargs):
-        return render(request, "registration/csv.html")
-    
-    def post(self, request, *args, **kwargs):
-        pass

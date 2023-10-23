@@ -1,7 +1,6 @@
 from django.urls import path
 from .views import (
-    ShiftView, TeacherFormView,
-    RegisterLessonView, ContactView, OutputCSVView,
+    TeacherFormView, RegisterLessonView, 
     BeforeRegisterWorkReportView, RegisterWorkReportView,
     PayrollView, ResultPayrollView, 
 )
@@ -14,10 +13,7 @@ urlpatterns = [
     path("register_work_report/", RegisterWorkReportView.as_view(), name="register_work_report"),
     path("payroll/", PayrollView.as_view(), name="payroll"),
     path("payroll_result/", ResultPayrollView.as_view(), name="payroll_result"),
-    path("shift/", ShiftView.as_view(), name="shift"),
     path("register_teacher/", TeacherFormView.as_view(), name="register_teacher"),
     path("register_lesson/", RegisterLessonView.as_view(), name="register_lesson"),
-    path("contact/", ContactView.as_view(), name="contact"),
-    path("csv/", OutputCSVView.as_view(), name="csv"),
     path("success/", TemplateView.as_view(template_name="success.html"), name="success"),
 ]
