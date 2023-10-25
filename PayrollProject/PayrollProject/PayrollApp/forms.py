@@ -1,7 +1,7 @@
 from django import forms
 from .models import (
     Teachers, DayOfWeek, RegisterLesson, RegisterWorkReport,
-    Payroll, Month, 
+    Payroll, Month, CSV, 
 )
 import datetime
 
@@ -80,10 +80,21 @@ class RegisterWorkReportForm(RegisterLessonForm):
 # 給与表示Form
 class PayrollForm(forms.ModelForm):
 
+    # 給与表示したい講師名と該当する月を選択
+    teacher_name = forms.ModelChoiceField(queryset=Teachers.objects.all(), label="講師名")
+    month = forms.ModelChoiceField(queryset=Month.objects.all(), label="月")
+
     class Meta:
         model = Payroll
         fields = "__all__"
 
-    # 給与表示したい講師名と該当する月
+# CSV出力Form
+class CSVForm(forms.ModelForm):
+
+    # CSV出力したい講師名と該当する月を選択
     teacher_name = forms.ModelChoiceField(queryset=Teachers.objects.all(), label="講師名")
     month = forms.ModelChoiceField(queryset=Month.objects.all(), label="月")
+
+    class Meta:
+        model = CSV
+        fields = "__all__"

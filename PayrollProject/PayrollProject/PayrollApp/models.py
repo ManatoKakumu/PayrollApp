@@ -118,8 +118,17 @@ class RegisterWorkReport(LessonBase):
 # 給与表示DB
 class Payroll(models.Model):
 
+    teacher_name = models.CharField(max_length=20)
+    month = models.CharField(max_length=5)
+
     class Meta:
         db_table ="payroll"
 
+# CSV出力DB
+class CSV(models.Model):
+
     teacher_name = models.CharField(max_length=20)
     month = models.CharField(max_length=5)
+
+    class Meta:
+        db_table = "csv"

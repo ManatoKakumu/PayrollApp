@@ -10,7 +10,7 @@ from . models import (
 )
 from . forms import (
     BeforeRegisterWorkReportForm, RegisterWorkReportForm, PayrollForm, 
-    TeacherForm, RegisterLessonForm, 
+    TeacherForm, RegisterLessonForm, CSVForm, 
 )
 from django.urls import reverse_lazy
 import configparser
@@ -243,7 +243,31 @@ class ContactView(View):
 class OutputCSVView(View):
 
     def get(self, request, *args, **kwargs):
-        return render(request, "registration/csv.html")
+        form = CSVForm()
+        return render(request, "registration/csv.html", context={
+            "form": form, 
+        })
     
     def post(self, request, *args, **kwargs):
         pass
+
+# class BeforeRegisterWorkReportView(View):
+    
+#     def get(self, request):
+#         form = BeforeRegisterWorkReportForm()
+#         return render(request, "display/before_work_report.html", context={
+#             "form": form,
+#         })
+    
+#     def post(self, request):
+#         form = BeforeRegisterWorkReportForm(request.POST)
+        
+#         if form.is_valid():
+#             global teacher_name, day
+#             teacher_name = form.cleaned_data["teacher_name"]
+#             day = form.cleaned_data["day"]
+#             return redirect("payroll_app:register_work_report")
+        
+#         return render(request, "display/before_work_report.html", context={
+#             "form": form,
+#         })
